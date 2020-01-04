@@ -21,11 +21,22 @@ public:
     string getString(string key);
 
 private:
+    //初始化
     bool init(string IP, int Port);
+    //是否连接正常
     bool isError();
+    //释放连接
     void freeReply();
+    //断开连接
     bool disConnect();
+    //连接Redis
     bool Connect();
+    //重连Redis
+    bool  ReConnect();
+    //命令返回成功判断
+    bool ReplyFlag(redisReply* rply);
+
+    bool Reply();
     redisContext *m_redis;
     string m_IP;
     int m_Port;
@@ -91,7 +102,15 @@ bool RedisContext::isError()
 {
     if (NULL == m_redis)
     {
-        freeReply();
+        return true;
+    }
+    return false;
+}
+
+bool RedisContext::ReConnect()
+{
+    if (NULL == m_redis)
+    {
         disConnect();
         Connect();
         return true;
@@ -133,6 +152,20 @@ bool RedisContext::Connect()
 
     cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
 }
+
+bool RedisContext::ReplyFlag(redisReply* rply)
+{
+    if (NULL == rply)
+    {
+        return false;
+    }
+
+    if (!(rply->type == REDIS_REPLY_STATUS && strcasecmp(rply->str, "OK") == 0))
+    {
+        return false;
+    }
+
+    return true;
 }
 void doTest()
 {
