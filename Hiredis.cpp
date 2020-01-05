@@ -17,8 +17,8 @@ public:
     ~RedisContext();
 
     //操作函数
-    int setString(string key, string value);
-    string getString(string key);
+    int setString(string &key, string &value);
+    string getString(string &key);
 
 private:
     //初始化
@@ -166,6 +166,11 @@ bool RedisContext::ReplyFlag(redisReply* rply)
     }
 
     return true;
+}
+
+int  RedisContext::setString(string &key, string &value)
+{
+
 }
 void doTest()
 {
