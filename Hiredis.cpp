@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <string>
 #include <iostream>
+#include <vector>
 #include <hiredis/hiredis.h>
 using namespace std;
 
@@ -19,6 +20,8 @@ public:
     //操作函数
     int setString(string &key, string &value);
     string getString(string &key);
+
+    int setString(string &key, vector<string> &v_value);
 
 private:
     //初始化
