@@ -173,7 +173,37 @@ bool RedisContext::ReplyFlag(redisReply* rply)
 
 int  RedisContext::setString(string &key, string &value)
 {
+    if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
+    {
+        cout << "Redis init Error !!!" << endl;
+        ReConnect();
+        return -1;
+    }
+    redisReply *reply;
+    reply = (redisReply *)redisCommand(m_redis, "SET %s %s", key.c_str(), value.c_str());//执行写入命令
+    cout << "set string type = " << reply->type << endl;//获取响应的枚举类型
+    int result = 0;
+    if (reply == NULL)
+    {
+        redisFree(m_redis);
+        m_redis = NULL;
+        result = -1;
+        cout << "set string fail : reply->str = NULL " << endl;
+        //pthread_spin_unlock(&m_redis_flock);
+        return -1;
+    }
+    else if (strcmp(reply->str, "OK") == 0)//根据不同的响应类型进行判断获取成功与否
+    {
+        result = 1;
+    }
+    else
+    {
+        result = -1;
+        cout << "set string fail :" << reply->str << endl;
+    }
+    freeReplyObject(reply);//释放响应信息
 
+    return result;
 }
 void doTest()
 {
