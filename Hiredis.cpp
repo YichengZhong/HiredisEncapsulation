@@ -85,7 +85,7 @@ RedisContext::~RedisContext()
     if (m_redis != NULL)
     {
         redisFree(m_redis);//析构函数释放资源
-        cout << "~RedisTool :: free redis connection " << endl;
+        cout << "~RedisContext :: free redis connection " << endl;
     }
 }
 
@@ -94,7 +94,7 @@ bool RedisContext::init(string IP, int Port)
     cout << "init : ip = " << IP <<"port:"<<Port << endl;
     m_redis = redisConnect(IP.c_str(), Port);
     if (m_redis==NULL || m_redis->err ) {
-        printf("RedisTool : Connection error: %s\n", m_redis->errstr);
+        printf("RedisContext : Connection error: %s\n", m_redis->errstr);
     }
     else
     {
@@ -208,12 +208,12 @@ int  RedisContext::setString(string &key, string &value)
 }
 
 //向数据库写入vector（list）类型数据
-int RedisTool::setList(string key, vector<int> value)
+int RedisContext::setList(string key, vector<int> value)
 {
     if (m_redis == NULL || m_redis->err)
     {
         cout << "Redis init Error !!!" << endl;
-        init();
+        ReConnect();
         return -1;
     }
 
@@ -258,13 +258,13 @@ int RedisTool::setList(string key, vector<int> value)
 }
 
 //从数据库读出vector（list）类型数据
-vector<int> RedisTool::getList(string key)
+vector<int> RedisContext::getList(string key)
 {
 
     if (m_redis == NULL || m_redis->err)
     {
         cout << "Redis init Error !!!" << endl;
-        init();
+        ReConnect();
         return vector<int>{};//返回空的向量
     }
 
