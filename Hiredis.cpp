@@ -18,6 +18,8 @@ public:
     ~RedisContext();
 
     //操作函数
+
+    bool IsKeyExist(string &key);
     int setString(string &key, string &value);
     string getString(string &key);
 
@@ -52,11 +54,11 @@ RedisContext::RedisContext()
     m_IP = "127.0.0.1";
     m_Port = 6379;
 
-    bool bRet=init(m_IP, m_Port);
+    bool bRet = init(m_IP, m_Port);
 
     if (false == bRet)
     {
-        cout << "connect Redis failed,IP is:"<<m_IP<<",Port is:"<<m_Port << endl;
+        cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
         m_redis = NULL;
     }
 
@@ -91,9 +93,9 @@ RedisContext::~RedisContext()
 
 bool RedisContext::init(string IP, int Port)
 {
-    cout << "init : ip = " << IP <<"port:"<<Port << endl;
+    cout << "init : ip = " << IP << "port:" << Port << endl;
     m_redis = redisConnect(IP.c_str(), Port);
-    if (m_redis==NULL || m_redis->err ) {
+    if (m_redis == NULL || m_redis->err) {
         printf("RedisContext : Connection error: %s\n", m_redis->errstr);
     }
     else
@@ -124,7 +126,7 @@ bool RedisContext::ReConnect()
 
 void RedisContext::freeReply()
 {
-    if (m_redis!=NULL)
+    if (m_redis != NULL)
     {
         freeReplyObject(m_redis);
         m_redis = NULL;
