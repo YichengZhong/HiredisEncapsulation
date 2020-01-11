@@ -25,6 +25,8 @@ public:
 
     int setList(string key, vector<int> value);
     vector<int> getList(string key);
+    
+    int scanKey(string key,int cursor ,string pattern);
 
 private:
     //初始化
