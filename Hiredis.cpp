@@ -26,10 +26,10 @@ public:
     int setList(string key, vector<int> value);
     vector<int> getList(string key);
     
-    int scanKey(int cursor ,string pattern);
-    int sscanKey(string key,int cursor ,string pattern);
-    int hscanKey(string key,int cursor ,string pattern);
-    int zscanKey(string key,int cursor ,string pattern);
+    int scanKey(int cursor ,string pattern,int count);
+    int sscanKey(string key,int cursor ,string pattern,int count);
+    int hscanKey(string key,int cursor ,string pattern,int count);
+    int zscanKey(string key,int cursor ,string pattern,int count);
 
 private:
     //初始化
