@@ -267,12 +267,13 @@ int RedisContext::setList(string key, vector<int> value)
 //从数据库读出vector（list）类型数据
 vector<int> RedisContext::getList(string key)
 {
-
+    vector<int>v_out;
+    v_out.clear();
     if (m_redis == NULL || m_redis->err)
     {
         cout << "Redis init Error !!!" << endl;
         ReConnect();
-        return vector<int>{};//返回空的向量
+        return v_out;//返回空的向量
     }
 
     redisReply *reply;
@@ -366,6 +367,45 @@ void doTest()
     }
     freeReplyObject(r);
     printf("Succeed to execute command[%s].\n", command4);
+    
+    const char* command6 = "scan 320 match * COUNT 10";
+    r = (redisReply*)redisCommand(c, command6);
+    //这里需要先说明一下，由于stest2键并不存在，因此Redis会返回空结果，这里只是为了演示。
+    printf("command6 execute command[%s].\n", command6);
+    if(NULL==r)
+    {
+        printf("command6 reply is NULL\n");
+        freeReplyObject(r);
+        redisFree(c);
+        return ;
+    }
+    
+    int index = atoi(r->element[0]->str);
+    printf("index:%d\n",index);
+    if(1 == r->elements)
+    {
+        printf("no data");
+        return;
+    }
+    if (r->element[1]->type != REDIS_REPLY_ARRAY)
+    {
+        printf("redis scan keys reply not array");
+        freeReplyObject(r);
+        return;
+    }
+    
+    printf("r->element[1]->elements is %d\n",r->element[1]->elements);
+    for (int i = 0; i < r->element[1]->elements; i++) 
+    {
+        if(r->element[1]->element[i]==NULL || r->element[1]->element[i]->str==NULL)
+        {
+            printf("err\n");
+            return ;
+        }
+        printf("i:%d,key:%s\n",i,r->element[1]->element[i]->str);
+    }
+
+    freeReplyObject(r);
 
     const char* command5 = "mget stest1 stest2";
     r = (redisReply*)redisCommand(c, command5);
