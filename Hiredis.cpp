@@ -357,18 +357,19 @@ bool RedisContext::IsKeyExist(string &key)
     {
         redisFree(m_redis);
         m_redis = NULL;
-        cout << "set string fail : reply->str = NULL " << endl;
+        cout << "IsKeyExist fail : reply->str = NULL " << endl;
         //pthread_spin_unlock(&m_redis_flock);
         return false;
     }
     else if (strcmp(reply->str, "1") == 0)//根据不同的响应类型进行判断获取成功与否
     {
+        cout << "key Exist :" << reply->str << endl;
         freeReplyObject(reply);//释放响应信息
         return true;
     }
     else
     {
-        cout << "set string fail :" << reply->str << endl;
+        cout << "key No Exist :" << reply->str << endl;
         freeReplyObject(reply);//释放响应信息
         return false;
     }
