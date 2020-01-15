@@ -342,6 +342,40 @@ int RedisContext::scanKey(int cursor ,string pattern,int count)
 
     freeReplyObject(r);
 }
+
+bool RedisContext::IsKeyExist(string &key)
+{
+    if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
+    {
+        cout << "Redis init Error !!!" << endl;
+        ReConnect();
+        return false;
+    }
+    redisReply *reply;
+    reply = (redisReply *)redisCommand(m_redis, "EXISTS %s", key.c_str());//执行写入命令
+    if (reply == NULL)
+    {
+        redisFree(m_redis);
+        m_redis = NULL;
+        cout << "set string fail : reply->str = NULL " << endl;
+        //pthread_spin_unlock(&m_redis_flock);
+        return false;
+    }
+    else if (strcmp(reply->str, "1") == 0)//根据不同的响应类型进行判断获取成功与否
+    {
+        freeReplyObject(reply);//释放响应信息
+        return true;
+    }
+    else
+    {
+        cout << "set string fail :" << reply->str << endl;
+        freeReplyObject(reply);//释放响应信息
+        return false;
+    }
+    freeReplyObject(reply);//释放响应信息
+
+    return true;
+}
 void doTest()
 {
     //该对象将用于其后所有与Redis操作的函数。
