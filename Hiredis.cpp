@@ -22,6 +22,7 @@ public:
     bool IsKeyExist(string &key);
     int setString(string &key, string &value);
     string getString(string &key);
+    int delString(string &key);
 
     int setList(string key, vector<int> value);
     vector<int> getList(string key);
