@@ -31,6 +31,8 @@ public:
     int sscanKey(string key,int cursor ,string pattern,int count);
     int hscanKey(string key,int cursor ,string pattern,int count);
     int zscanKey(string key,int cursor ,string pattern,int count);
+    
+    int scanAllKey(string pattern,int count);
 
 private:
     //初始化
