@@ -346,6 +346,11 @@ int RedisContext::scanKey(int cursor ,string pattern,int count)
     freeReplyObject(r);
 }
 
+int RedisContext::scanAllKey(string pattern,int count)
+{
+    
+}
+
 bool RedisContext::IsKeyExist(string &key)
 {
     if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
