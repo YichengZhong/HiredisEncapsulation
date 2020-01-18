@@ -348,7 +348,43 @@ int RedisContext::scanKey(int cursor ,string pattern,int count)
 
 int RedisContext::scanAllKey(string pattern,int count)
 {
+    string command="scan "+to_string(cursor)+" match "+pattern+" count "+to_string(count);
+    r = (redisReply*)redisCommand(c, command);
+    printf("command execute command[%s].\n", command);
+    if(NULL==r)
+    {
+        printf("command reply is NULL\n");
+        freeReplyObject(r);
+        redisFree(c);
+        return ;
+    }
     
+    int index = atoi(r->element[0]->str);
+    printf("index:%d\n",index);
+    if(1 == r->elements)
+    {
+        printf("no data");
+        return;
+    }
+    if (r->element[1]->type != REDIS_REPLY_ARRAY)
+    {
+        printf("redis scan keys reply not array");
+        freeReplyObject(r);
+        return;
+    }
+    
+    printf("r->element[1]->elements is %d\n",r->element[1]->elements);
+    for (int i = 0; i < r->element[1]->elements; i++) 
+    {
+        if(r->element[1]->element[i]==NULL || r->element[1]->element[i]->str==NULL)
+        {
+            printf("err\n");
+            return ;
+        }
+        printf("i:%d,key:%s\n",i,r->element[1]->element[i]->str);
+    }
+
+    freeReplyObject(r);
 }
 
 bool RedisContext::IsKeyExist(string &key)
