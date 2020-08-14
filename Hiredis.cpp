@@ -309,7 +309,7 @@ int RedisContext::setList(string key, vector<int> value)
 int RedisContext::scanKey(int cursor ,string pattern,int count)
 {
     string command="scan "+to_string(cursor)+" match "+pattern+" count "+to_string(count);
-    r = (redisReply*)redisCommand(c, command);
+    redisReply* r = (redisReply*)redisCommand(c, command);
     printf("command execute command[%s].\n", command);
     if(NULL==r)
     {
@@ -350,7 +350,7 @@ int RedisContext::scanKey(int cursor ,string pattern,int count)
 int RedisContext::scanAllKey(string pattern,int count)
 {
     string command="scan "+to_string(cursor)+" match "+pattern+" count "+to_string(count);
-    r = (redisReply*)redisCommand(c, command);
+    redisReply* r = (redisReply*)redisCommand(c, command);
     printf("command execute command[%s].\n", command);
     if(NULL==r)
     {
