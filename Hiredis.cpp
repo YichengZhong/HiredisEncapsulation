@@ -10,6 +10,7 @@
 #include <hiredis/hiredis.h>
 using namespace std;
 
+//编译方式： g++ Hiredis.cpp -o hiredis -L/usr/local/lib/ -l/usr/local/include/hiredis
 class RedisContext
 {
 public:
