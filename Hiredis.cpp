@@ -10,7 +10,7 @@
 #include <hiredis/hiredis.h>
 using namespace std;
 
-//编译方式： g++ Hiredis.cpp -o hiredis -L/usr/local/lib/ -l/usr/local/include/hiredis
+//编译方式： g++ Hiredis.cpp -o hiredis -L/usr/local/lib/ -l/usr/local/include/hiredis -std=c++11
 class RedisContext
 {
 public:
@@ -269,7 +269,7 @@ int RedisContext::setList(string key, vector<int> value)
 }
 
 //从数据库读出vector（list）类型数据
-vector<int> RedisContext::getList(string key)
+/*vector<int> RedisContext::getList(string key)
 {
     vector<int>v_out;
     v_out.clear();
@@ -304,7 +304,7 @@ vector<int> RedisContext::getList(string key)
     freeReplyObject(r);
     return result;
 
-}
+}*/
 
 int RedisContext::scanKey(int cursor ,string pattern,int count)
 {
