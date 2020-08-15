@@ -10,418 +10,420 @@
 #include <hiredis/hiredis.h>
 using namespace std;
 
-//编译方式： g++ Hiredis.cpp -o hiredis -L/usr/local/lib/ -l/usr/local/include/hiredis -std=c++11
-class RedisContext
-{
-public:
-    RedisContext();
-    RedisContext(string IP, int Port);
-    ~RedisContext();
+//编译方式： g++ Hiredis.cpp -o hiredis -L/usr/local/lib/ -lhiredis
+
+// class RedisContext
+// {
+// public:
+    // RedisContext();
+    // RedisContext(string IP, int Port);
+    // ~RedisContext();
 
     //操作函数
 
-    bool IsKeyExist(string &key);
-    int setString(string &key, string &value);
-    string getString(string &key);
-    int delString(string &key);
+    // bool IsKeyExist(string &key);
+    // int setString(string &key, string &value);
+    // string getString(string &key);
+    // int delString(string &key);
 
-    int setList(string key, vector<int> value);
-    vector<int> getList(string key);
+    // int setList(string key, vector<int> value);
+    // vector<int> getList(string key);
     
-    int scanKey(int cursor ,string pattern,int count);
-    int sscanKey(string key,int cursor ,string pattern,int count);
-    int hscanKey(string key,int cursor ,string pattern,int count);
-    int zscanKey(string key,int cursor ,string pattern,int count);
+    // int scanKey(int cursor ,string pattern,int count);
+    // int sscanKey(string key,int cursor ,string pattern,int count);
+    // int hscanKey(string key,int cursor ,string pattern,int count);
+    // int zscanKey(string key,int cursor ,string pattern,int count);
     
-    int scanAllKey(string pattern,int count);
+    // int scanAllKey(string pattern,int count);
 
-private:
+// private:
     //初始化
-    bool init(string IP, int Port);
+    // bool init(string IP, int Port);
     //是否连接正常
-    bool isError();
+    // bool isError();
     //释放连接
-    void freeReply();
+    // void freeReply();
     //断开连接
-    bool disConnect();
+    // bool disConnect();
     //连接Redis
-    bool Connect();
+    // bool Connect();
     //重连Redis
-    bool  ReConnect();
+    // bool  ReConnect();
     //命令返回成功判断
-    bool ReplyFlag(redisReply* rply);
+    // bool ReplyFlag(redisReply* rply);
 
-    bool Reply();
-    redisContext *m_redis;
-    string m_IP;
-    int m_Port;
-};
+    // bool Reply();
+    // redisContext *m_redis;
+    // string m_IP;
+    // int m_Port;
+// };
 
-RedisContext::RedisContext()
-{
-    m_redis = NULL;
-    m_IP = "127.0.0.1";
-    m_Port = 6379;
+// RedisContext::RedisContext()
+// {
+    // m_redis = NULL;
+    // m_IP = "127.0.0.1";
+    // m_Port = 6379;
 
-    bool bRet = init(m_IP, m_Port);
+    // bool bRet = init(m_IP, m_Port);
 
-    if (false == bRet)
-    {
-        cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-        m_redis = NULL;
-    }
+    // if (false == bRet)
+    // {
+        // cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+        // m_redis = NULL;
+    // }
 
-    cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-}
+    // cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+// }
 
-RedisContext::RedisContext(string IP, int Port)
-{
-    m_redis = NULL;
-    m_IP = IP;
-    m_Port = Port;
+// RedisContext::RedisContext(string IP, int Port)
+// {
+    // m_redis = NULL;
+    // m_IP = IP;
+    // m_Port = Port;
 
-    bool bRet = init(m_IP, m_Port);
+    // bool bRet = init(m_IP, m_Port);
 
-    if (false == bRet)
-    {
-        cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-        m_redis = NULL;
-    }
+    // if (false == bRet)
+    // {
+        // cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+        // m_redis = NULL;
+    // }
 
-    cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-}
+    // cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+// }
 
-RedisContext::~RedisContext()
-{
-    if (m_redis != NULL)
-    {
-        redisFree(m_redis);//析构函数释放资源
-        cout << "~RedisContext :: free redis connection " << endl;
-    }
-}
+// RedisContext::~RedisContext()
+// {
+    // if (m_redis != NULL)
+    // {
+        // redisFree(m_redis);//析构函数释放资源
+        // cout << "~RedisContext :: free redis connection " << endl;
+    // }
+// }
 
-bool RedisContext::init(string IP, int Port)
-{
-    cout << "init : ip = " << IP << "port:" << Port << endl;
-    m_redis = redisConnect(IP.c_str(), Port);
-    if (m_redis == NULL || m_redis->err) {
-        printf("RedisContext : Connection error: %s\n", m_redis->errstr);
-    }
-    else
-    {
-        cout << "init redis tool success " << endl;
-    }
-}
+// bool RedisContext::init(string IP, int Port)
+// {
+    // cout << "init : ip = " << IP << "port:" << Port << endl;
+    // m_redis = redisConnect(IP.c_str(), Port);
+    // if (m_redis == NULL || m_redis->err) {
+        // printf("RedisContext : Connection error: %s\n", m_redis->errstr);
+    // }
+    // else
+    // {
+        // cout << "init redis tool success " << endl;
+    // }
+// }
 
-bool RedisContext::isError()
-{
-    if (NULL == m_redis)
-    {
-        return true;
-    }
-    return false;
-}
+// bool RedisContext::isError()
+// {
+    // if (NULL == m_redis)
+    // {
+        // return true;
+    // }
+    // return false;
+// }
 
-bool RedisContext::ReConnect()
-{
-    if (NULL == m_redis)
-    {
-        disConnect();
-        Connect();
-        return true;
-    }
-    return false;
-}
+// bool RedisContext::ReConnect()
+// {
+    // if (NULL == m_redis)
+    // {
+        // disConnect();
+        // Connect();
+        // return true;
+    // }
+    // return false;
+// }
 
-void RedisContext::freeReply()
-{
-    if (m_redis != NULL)
-    {
-        freeReplyObject(m_redis);
-        m_redis = NULL;
-    }
-}
+// void RedisContext::freeReply()
+// {
+    // if (m_redis != NULL)
+    // {
+        // freeReplyObject(m_redis);
+        // m_redis = NULL;
+    // }
+// }
 
-bool RedisContext::disConnect()
-{
-    if (m_redis != NULL)
-    {
-        freeReplyObject(m_redis);
-        m_redis = NULL;
-        return true;
-    }
+// bool RedisContext::disConnect()
+// {
+    // if (m_redis != NULL)
+    // {
+        // freeReplyObject(m_redis);
+        // m_redis = NULL;
+        // return true;
+    // }
 
-    return false;
+    // return false;
 
-}
+// }
 
-bool RedisContext::Connect()
-{
-    bool bRet = init(m_IP, m_Port);
+// bool RedisContext::Connect()
+// {
+    // bool bRet = init(m_IP, m_Port);
 
-    if (false == bRet)
-    {
-        cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-        m_redis = NULL;
-    }
+    // if (false == bRet)
+    // {
+        // cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+        // m_redis = NULL;
+    // }
 
-    cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-}
+    // cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+// }
 
-bool RedisContext::ReplyFlag(redisReply* rply)
-{
-    if (NULL == rply)
-    {
-        return false;
-    }
+// bool RedisContext::ReplyFlag(redisReply* rply)
+// {
+    // if (NULL == rply)
+    // {
+        // return false;
+    // }
 
-    if (!(rply->type == REDIS_REPLY_STATUS && strcasecmp(rply->str, "OK") == 0))
-    {
-        return false;
-    }
+    // if (!(rply->type == REDIS_REPLY_STATUS && strcasecmp(rply->str, "OK") == 0))
+    // {
+        // return false;
+    // }
 
-    return true;
-}
+    // return true;
+// }
 
-int  RedisContext::setString(string &key, string &value)
-{
-    if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
-    {
-        cout << "Redis init Error !!!" << endl;
-        ReConnect();
-        return -1;
-    }
-    redisReply *reply;
-    reply = (redisReply *)redisCommand(m_redis, "SET %s %s", key.c_str(), value.c_str());//执行写入命令
-    cout << "set string type = " << reply->type << endl;//获取响应的枚举类型
-    int result = 0;
-    if (reply == NULL)
-    {
-        redisFree(m_redis);
-        m_redis = NULL;
-        result = -1;
-        cout << "set string fail : reply->str = NULL " << endl;
+// int  RedisContext::setString(string &key, string &value)
+// {
+    // if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
+    // {
+        // cout << "Redis init Error !!!" << endl;
+        // ReConnect();
+        // return -1;
+    // }
+    // redisReply *reply;
+    // reply = (redisReply *)redisCommand(m_redis, "SET %s %s", key.c_str(), value.c_str());//执行写入命令
+    // cout << "set string type = " << reply->type << endl;//获取响应的枚举类型
+    // int result = 0;
+    // if (reply == NULL)
+    // {
+        // redisFree(m_redis);
+        // m_redis = NULL;
+        // result = -1;
+        // cout << "set string fail : reply->str = NULL " << endl;
         //pthread_spin_unlock(&m_redis_flock);
-        return -1;
-    }
-    else if (strcmp(reply->str, "OK") == 0)//根据不同的响应类型进行判断获取成功与否
-    {
-        result = 1;
-    }
-    else
-    {
-        result = -1;
-        cout << "set string fail :" << reply->str << endl;
-    }
-    freeReplyObject(reply);//释放响应信息
+        // return -1;
+    // }
+    // else if (strcmp(reply->str, "OK") == 0)//根据不同的响应类型进行判断获取成功与否
+    // {
+        // result = 1;
+    // }
+    // else
+    // {
+        // result = -1;
+        // cout << "set string fail :" << reply->str << endl;
+    // }
+    // freeReplyObject(reply);//释放响应信息
 
-    return result;
-}
+    // return result;
+// }
 
 //向数据库写入vector（list）类型数据
-int RedisContext::setList(string key, vector<int> value)
-{
-    if (m_redis == NULL || m_redis->err)
-    {
-        cout << "Redis init Error !!!" << endl;
-        ReConnect();
-        return -1;
-    }
+// int RedisContext::setList(string key, vector<int> value)
+// {
+    // if (m_redis == NULL || m_redis->err)
+    // {
+        // cout << "Redis init Error !!!" << endl;
+        // ReConnect();
+        // return -1;
+    // }
 
-    redisReply *reply;
+    // redisReply *reply;
 
-    int valueSize = value.size();
-    int result = 0;
+    // int valueSize = value.size();
+    // int result = 0;
 
-    for (int i = 0; i < valueSize; i++)
-    {
-        reply = (redisReply*)redisCommand(m_redis, "RPUSH %s %d", key.c_str(), value.at(i));
-        cout << "set list type = " << reply->type << " ";
-        int old = reply->integer;
-        if (reply == NULL)
-        {
-            redisFree(m_redis);
-            m_redis = NULL;
-            result = -1;
-            cout << "set list fail : reply->str = NULL " << endl;
+    // for (int i = 0; i < valueSize; i++)
+    // {
+        // reply = (redisReply*)redisCommand(m_redis, "RPUSH %s %d", key.c_str(), value.at(i));
+        // cout << "set list type = " << reply->type << " ";
+        // int old = reply->integer;
+        // if (reply == NULL)
+        // {
+            // redisFree(m_redis);
+            // m_redis = NULL;
+            // result = -1;
+            // cout << "set list fail : reply->str = NULL " << endl;
             //pthread_spin_unlock(&m_redis_flock);
-            return -1;
-        }
-        else if (reply->integer == old++)
-        {
-            result = 1;
-            cout << "rpush list ok" << endl;
-            continue;
-        }
-        else
-        {
-            result = -1;
-            cout << "set list fail ,reply->integer = " << reply->integer << endl;
-            return -1;
-        }
+            // return -1;
+        // }
+        // else if (reply->integer == old++)
+        // {
+            // result = 1;
+            // cout << "rpush list ok" << endl;
+            // continue;
+        // }
+        // else
+        // {
+            // result = -1;
+            // cout << "set list fail ,reply->integer = " << reply->integer << endl;
+            // return -1;
+        // }
 
-    }
+    // }
 
-    freeReplyObject(reply);
-    cout << "set List  success" << endl;
-    return result;
+    // freeReplyObject(reply);
+    // cout << "set List  success" << endl;
+    // return result;
 
-}
+// }
 
 //从数据库读出vector（list）类型数据
-/*vector<int> RedisContext::getList(string key)
-{
-    vector<int>v_out;
-    v_out.clear();
-    if (m_redis == NULL || m_redis->err)
-    {
-        cout << "Redis init Error !!!" << endl;
-        ReConnect();
-        return v_out;//返回空的向量
-    }
+// vector<int> RedisContext::getList(string key)
+// {
+    // vector<int>v_out;
+    // v_out.clear();
+    // if (m_redis == NULL || m_redis->err)
+    // {
+        // cout << "Redis init Error !!!" << endl;
+        // ReConnect();
+        // return v_out;//返回空的向量
+    // }
 
-    redisReply *reply;
-    reply = (redisReply*)redisCommand(m_redis, "LLEN %s", key.c_str());
-    int valueSize = reply->integer;
-    cout << "List size is :" << reply->integer << endl;
+    // redisReply *reply;
+    // reply = (redisReply*)redisCommand(m_redis, "LLEN %s", key.c_str());
+    // int valueSize = reply->integer;
+    // cout << "List size is :" << reply->integer << endl;
 
-    reply = (redisReply*)redisCommand(m_redis, "LRANGE %s %d %d", key.c_str(), 0, valueSize - 1);
-    cout << "get list type = " << reply->type << endl;
-    cout << "get list size = " << reply->elements << endl;//对于数组类型可以用elements元素获取数组长度
+    // reply = (redisReply*)redisCommand(m_redis, "LRANGE %s %d %d", key.c_str(), 0, valueSize - 1);
+    // cout << "get list type = " << reply->type << endl;
+    // cout << "get list size = " << reply->elements << endl;//对于数组类型可以用elements元素获取数组长度
 
-    redisReply** replyVector = reply->element;//获取数组指针
-    vector<int> result;
-    for (int i = 0; i < valueSize; i++)
-    {
-        string temp = (*replyVector)->str;//遍历redisReply*数组,存入vector向量
-        int a = atoi(temp.c_str());
-        result.push_back(a);
-        replyVector++;
-    }
+    // redisReply** replyVector = reply->element;//获取数组指针
+    // vector<int> result;
+    // for (int i = 0; i < valueSize; i++)
+    // {
+        // string temp = (*replyVector)->str;//遍历redisReply*数组,存入vector向量
+        // int a = atoi(temp.c_str());
+        // result.push_back(a);
+        // replyVector++;
+    // }
 
-    cout << "result size:" << result.size() << endl;
+    // cout << "result size:" << result.size() << endl;
     
-    freeReplyObject(r);
-    return result;
+    // freeReplyObject(r);
+    // return result;
 
-}*/
+// }
 
-int RedisContext::scanKey(int cursor ,string pattern,int count)
-{
-    string command="scan "+to_string(cursor)+" match "+pattern+" count "+to_string(count);
-    redisReply* r = (redisReply*)redisCommand(c, command);
-    printf("command execute command[%s].\n", command);
-    if(NULL==r)
-    {
-        printf("command reply is NULL\n");
-        freeReplyObject(r);
-        redisFree(c);
-        return ;
-    }
+// int RedisContext::scanKey(int cursor ,string pattern,int count)
+// {
+    // string command="scan "+to_string(cursor)+" match "+pattern+" count "+to_string(count);
+    // redisReply* r = (redisReply*)redisCommand(c, command);
+    // printf("command execute command[%s].\n", command);
+    // if(NULL==r)
+    // {
+        // printf("command reply is NULL\n");
+        // freeReplyObject(r);
+        // redisFree(c);
+        // return ;
+    // }
     
-    int index = atoi(r->element[0]->str);
-    printf("index:%d\n",index);
-    if(1 == r->elements)
-    {
-        printf("no data");
-        return;
-    }
-    if (r->element[1]->type != REDIS_REPLY_ARRAY)
-    {
-        printf("redis scan keys reply not array");
-        freeReplyObject(r);
-        return;
-    }
+    // int index = atoi(r->element[0]->str);
+    // printf("index:%d\n",index);
+    // if(1 == r->elements)
+    // {
+        // printf("no data");
+        // return;
+    // }
+    // if (r->element[1]->type != REDIS_REPLY_ARRAY)
+    // {
+        // printf("redis scan keys reply not array");
+        // freeReplyObject(r);
+        // return;
+    // }
     
-    printf("r->element[1]->elements is %d\n",r->element[1]->elements);
-    for (int i = 0; i < r->element[1]->elements; i++) 
-    {
-        if(r->element[1]->element[i]==NULL || r->element[1]->element[i]->str==NULL)
-        {
-            printf("err\n");
-            return ;
-        }
-        printf("i:%d,key:%s\n",i,r->element[1]->element[i]->str);
-    }
+    // printf("r->element[1]->elements is %d\n",r->element[1]->elements);
+    // for (int i = 0; i < r->element[1]->elements; i++) 
+    // {
+        // if(r->element[1]->element[i]==NULL || r->element[1]->element[i]->str==NULL)
+        // {
+            // printf("err\n");
+            // return ;
+        // }
+        // printf("i:%d,key:%s\n",i,r->element[1]->element[i]->str);
+    // }
 
-    freeReplyObject(r);
-}
+    // freeReplyObject(r);
+// }
 
-int RedisContext::scanAllKey(string pattern,int count)
-{
-    string command="scan "+to_string(cursor)+" match "+pattern+" count "+to_string(count);
-    redisReply* r = (redisReply*)redisCommand(c, command);
-    printf("command execute command[%s].\n", command);
-    if(NULL==r)
-    {
-        printf("command reply is NULL\n");
-        freeReplyObject(r);
-        redisFree(c);
-        return ;
-    }
+// int RedisContext::scanAllKey(string pattern,int count)
+// {
+    // string command="scan "+to_string(cursor)+" match "+pattern+" count "+to_string(count);
+    // redisReply* r = (redisReply*)redisCommand(c, command);
+    // printf("command execute command[%s].\n", command);
+    // if(NULL==r)
+    // {
+        // printf("command reply is NULL\n");
+        // freeReplyObject(r);
+        // redisFree(c);
+        // return ;
+    // }
     
-    int index = atoi(r->element[0]->str);
-    printf("index:%d\n",index);
-    if(1 == r->elements)
-    {
-        printf("no data");
-        return;
-    }
-    if (r->element[1]->type != REDIS_REPLY_ARRAY)
-    {
-        printf("redis scan keys reply not array");
-        freeReplyObject(r);
-        return;
-    }
+    // int index = atoi(r->element[0]->str);
+    // printf("index:%d\n",index);
+    // if(1 == r->elements)
+    // {
+        // printf("no data");
+        // return;
+    // }
+    // if (r->element[1]->type != REDIS_REPLY_ARRAY)
+    // {
+        // printf("redis scan keys reply not array");
+        // freeReplyObject(r);
+        // return;
+    // }
     
-    printf("r->element[1]->elements is %d\n",r->element[1]->elements);
-    for (int i = 0; i < r->element[1]->elements; i++) 
-    {
-        if(r->element[1]->element[i]==NULL || r->element[1]->element[i]->str==NULL)
-        {
-            printf("err\n");
-            return ;
-        }
-        printf("i:%d,key:%s\n",i,r->element[1]->element[i]->str);
-    }
+    // printf("r->element[1]->elements is %d\n",r->element[1]->elements);
+    // for (int i = 0; i < r->element[1]->elements; i++) 
+    // {
+        // if(r->element[1]->element[i]==NULL || r->element[1]->element[i]->str==NULL)
+        // {
+            // printf("err\n");
+            // return ;
+        // }
+        // printf("i:%d,key:%s\n",i,r->element[1]->element[i]->str);
+    // }
 
-    freeReplyObject(r);
-}
+    // freeReplyObject(r);
+// }
 
-bool RedisContext::IsKeyExist(string &key)
-{
-    if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
-    {
-        cout << "Redis init Error !!!" << endl;
-        ReConnect();
-        return false;
-    }
-    redisReply *reply;
-    reply = (redisReply *)redisCommand(m_redis, "EXISTS %s", key.c_str());//执行写入命令
-    if (reply == NULL)
-    {
-        redisFree(m_redis);
-        m_redis = NULL;
-        cout << "IsKeyExist fail : reply->str = NULL " << endl;
+// bool RedisContext::IsKeyExist(string &key)
+// {
+    // if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
+    // {
+        // cout << "Redis init Error !!!" << endl;
+        // ReConnect();
+        // return false;
+    // }
+    // redisReply *reply;
+    // reply = (redisReply *)redisCommand(m_redis, "EXISTS %s", key.c_str());//执行写入命令
+    // if (reply == NULL)
+    // {
+        // redisFree(m_redis);
+        // m_redis = NULL;
+        // cout << "IsKeyExist fail : reply->str = NULL " << endl;
         //pthread_spin_unlock(&m_redis_flock);
-        return false;
-    }
-    else if (strcmp(reply->str, "1") == 0)//根据不同的响应类型进行判断获取成功与否
-    {
-        cout << "key Exist :" << reply->str << endl;
-        freeReplyObject(reply);//释放响应信息
-        return true;
-    }
-    else
-    {
-        cout << "key No Exist :" << reply->str << endl;
-        freeReplyObject(reply);//释放响应信息
-        return false;
-    }
-    freeReplyObject(reply);//释放响应信息
+        // return false;
+    // }
+    // else if (strcmp(reply->str, "1") == 0)//根据不同的响应类型进行判断获取成功与否
+    // {
+        // cout << "key Exist :" << reply->str << endl;
+        // freeReplyObject(reply);//释放响应信息
+        // return true;
+    // }
+    // else
+    // {
+        // cout << "key No Exist :" << reply->str << endl;
+        // freeReplyObject(reply);//释放响应信息
+        // return false;
+    // }
+    // freeReplyObject(reply);//释放响应信息
 
-    return true;
-}
+    // return true;
+// }
+
 void doTest()
 {
     //该对象将用于其后所有与Redis操作的函数。
