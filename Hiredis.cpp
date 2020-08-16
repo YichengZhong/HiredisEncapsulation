@@ -71,8 +71,10 @@ RedisContext::RedisContext()
         cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
         m_redis = NULL;
     }
-
-    cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+    else
+    {
+        cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+    }
 }
 
 RedisContext::RedisContext(string IP, int Port)
@@ -88,8 +90,10 @@ RedisContext::RedisContext(string IP, int Port)
         cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
         m_redis = NULL;
     }
-
-    cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+    else
+    {
+        cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+    }
 }
 
 RedisContext::~RedisContext()
@@ -97,7 +101,7 @@ RedisContext::~RedisContext()
     if (m_redis != NULL)
     {
         //析构函数释放资源
-		redisFree(m_redis);\
+        redisFree(m_redis);\
         cout << "~RedisContext :: free redis connection " << endl;
     }
 }
@@ -108,10 +112,12 @@ bool RedisContext::init(string IP, int Port)
     m_redis = redisConnect(IP.c_str(), Port);
     if (m_redis == NULL || m_redis->err) {
         printf("RedisContext : Connection error: %s\n", m_redis->errstr);
+        return false;
     }
     else
     {
         cout << "init redis tool success " << endl;
+        return true;
     }
 }
 
@@ -187,7 +193,7 @@ bool RedisContext::ReplyFlag(redisReply* rply)
 
 int  RedisContext::setString(string &key, string &value)
 {
-    if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
+    if (m_redis == NULL)//int err; /* Error flags, 错误标识，0表示无错误 */
     {
         cout << "Redis init Error !!!" << endl;
         ReConnect();
@@ -203,7 +209,6 @@ int  RedisContext::setString(string &key, string &value)
         m_redis = NULL;
         result = -1;
         cout << "set string fail : reply->str = NULL " << endl;
-        pthread_spin_unlock(&m_redis_flock);
         return -1;
     }
     else if (strcmp(reply->str, "OK") == 0)//根据不同的响应类型进行判断获取成功与否
@@ -618,8 +623,18 @@ void doTest()
     return;
 }
 
+void test2()
+{
+    RedisContext myRedisContext("127.0.0.1", 6379);
+    string key="zyc";
+    string value="myzyc";
+    myRedisContext.setString(key,value);
+    return ;
+}
+
 int main()
 {
-    doTest();
+    //doTest();
+    test2();
     return 0;
 }
