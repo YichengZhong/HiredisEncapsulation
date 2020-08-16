@@ -12,212 +12,213 @@ using namespace std;
 
 //编译方式： g++ Hiredis.cpp -o hiredis -L/usr/local/lib/ -lhiredis
 
-// class RedisContext
-// {
-// public:
-    // RedisContext();
-    // RedisContext(string IP, int Port);
-    // ~RedisContext();
+class RedisContext
+{
+public:
+    RedisContext();
+    RedisContext(string IP, int Port);
+    ~RedisContext();
 
     //操作函数
 
-    // bool IsKeyExist(string &key);
-    // int setString(string &key, string &value);
-    // string getString(string &key);
-    // int delString(string &key);
+    bool IsKeyExist(string &key);
+    int setString(string &key, string &value);
+    string getString(string &key);
+    int delString(string &key);
 
-    // int setList(string key, vector<int> value);
-    // vector<int> getList(string key);
+    int setList(string key, vector<int> value);
+    vector<int> getList(string key);
     
-    // int scanKey(int cursor ,string pattern,int count);
-    // int sscanKey(string key,int cursor ,string pattern,int count);
-    // int hscanKey(string key,int cursor ,string pattern,int count);
-    // int zscanKey(string key,int cursor ,string pattern,int count);
+    int scanKey(int cursor ,string pattern,int count);
+    int sscanKey(string key,int cursor ,string pattern,int count);
+    int hscanKey(string key,int cursor ,string pattern,int count);
+    int zscanKey(string key,int cursor ,string pattern,int count);
     
-    // int scanAllKey(string pattern,int count);
+    int scanAllKey(string pattern,int count);
 
-// private:
+private:
     //初始化
-    // bool init(string IP, int Port);
+    bool init(string IP, int Port);
     //是否连接正常
-    // bool isError();
+    bool isError();
     //释放连接
-    // void freeReply();
+    void freeReply();
     //断开连接
-    // bool disConnect();
+    bool disConnect();
     //连接Redis
-    // bool Connect();
+    bool Connect();
     //重连Redis
-    // bool  ReConnect();
+    bool  ReConnect();
     //命令返回成功判断
-    // bool ReplyFlag(redisReply* rply);
+    bool ReplyFlag(redisReply* rply);
 
-    // bool Reply();
-    // redisContext *m_redis;
-    // string m_IP;
-    // int m_Port;
-// };
+    bool Reply();
+    redisContext *m_redis;
+    string m_IP;
+    int m_Port;
+};
 
-// RedisContext::RedisContext()
-// {
-    // m_redis = NULL;
-    // m_IP = "127.0.0.1";
-    // m_Port = 6379;
+RedisContext::RedisContext()
+{
+    m_redis = NULL;
+    m_IP = "127.0.0.1";
+    m_Port = 6379;
 
-    // bool bRet = init(m_IP, m_Port);
+    bool bRet = init(m_IP, m_Port);
 
-    // if (false == bRet)
-    // {
-        // cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-        // m_redis = NULL;
-    // }
+    if (false == bRet)
+    {
+        cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+        m_redis = NULL;
+    }
 
-    // cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-// }
+    cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+}
 
-// RedisContext::RedisContext(string IP, int Port)
-// {
-    // m_redis = NULL;
-    // m_IP = IP;
-    // m_Port = Port;
+RedisContext::RedisContext(string IP, int Port)
+{
+    m_redis = NULL;
+    m_IP = IP;
+    m_Port = Port;
 
-    // bool bRet = init(m_IP, m_Port);
+    bool bRet = init(m_IP, m_Port);
 
-    // if (false == bRet)
-    // {
-        // cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-        // m_redis = NULL;
-    // }
+    if (false == bRet)
+    {
+        cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+        m_redis = NULL;
+    }
 
-    // cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-// }
+    cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+}
 
-// RedisContext::~RedisContext()
-// {
-    // if (m_redis != NULL)
-    // {
-        // redisFree(m_redis);//析构函数释放资源
-        // cout << "~RedisContext :: free redis connection " << endl;
-    // }
-// }
+RedisContext::~RedisContext()
+{
+    if (m_redis != NULL)
+    {
+        //析构函数释放资源
+		redisFree(m_redis);\
+        cout << "~RedisContext :: free redis connection " << endl;
+    }
+}
 
-// bool RedisContext::init(string IP, int Port)
-// {
-    // cout << "init : ip = " << IP << "port:" << Port << endl;
-    // m_redis = redisConnect(IP.c_str(), Port);
-    // if (m_redis == NULL || m_redis->err) {
-        // printf("RedisContext : Connection error: %s\n", m_redis->errstr);
-    // }
-    // else
-    // {
-        // cout << "init redis tool success " << endl;
-    // }
-// }
+bool RedisContext::init(string IP, int Port)
+{
+    cout << "init : ip = " << IP << "port:" << Port << endl;
+    m_redis = redisConnect(IP.c_str(), Port);
+    if (m_redis == NULL || m_redis->err) {
+        printf("RedisContext : Connection error: %s\n", m_redis->errstr);
+    }
+    else
+    {
+        cout << "init redis tool success " << endl;
+    }
+}
 
-// bool RedisContext::isError()
-// {
-    // if (NULL == m_redis)
-    // {
-        // return true;
-    // }
-    // return false;
-// }
+bool RedisContext::isError()
+{
+    if (NULL == m_redis)
+    {
+        return true;
+    }
+    return false;
+}
 
-// bool RedisContext::ReConnect()
-// {
-    // if (NULL == m_redis)
-    // {
-        // disConnect();
-        // Connect();
-        // return true;
-    // }
-    // return false;
-// }
+bool RedisContext::ReConnect()
+{
+    if (NULL == m_redis)
+    {
+        disConnect();
+        Connect();
+        return true;
+    }
+    return false;
+}
 
-// void RedisContext::freeReply()
-// {
-    // if (m_redis != NULL)
-    // {
-        // freeReplyObject(m_redis);
-        // m_redis = NULL;
-    // }
-// }
+void RedisContext::freeReply()
+{
+    if (m_redis != NULL)
+    {
+        redisFree(m_redis);
+        m_redis = NULL;
+    }
+}
 
-// bool RedisContext::disConnect()
-// {
-    // if (m_redis != NULL)
-    // {
-        // freeReplyObject(m_redis);
-        // m_redis = NULL;
-        // return true;
-    // }
+bool RedisContext::disConnect()
+{
+    if (m_redis != NULL)
+    {
+        redisFree(m_redis);
+        m_redis = NULL;
+        return true;
+    }
 
-    // return false;
+    return false;
 
-// }
+}
 
-// bool RedisContext::Connect()
-// {
-    // bool bRet = init(m_IP, m_Port);
+bool RedisContext::Connect()
+{
+    bool bRet = init(m_IP, m_Port);
 
-    // if (false == bRet)
-    // {
-        // cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-        // m_redis = NULL;
-    // }
+    if (false == bRet)
+    {
+        cout << "connect Redis failed,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+        m_redis = NULL;
+    }
 
-    // cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
-// }
+    cout << "connect Redis success,IP is:" << m_IP << ",Port is:" << m_Port << endl;
+}
 
-// bool RedisContext::ReplyFlag(redisReply* rply)
-// {
-    // if (NULL == rply)
-    // {
-        // return false;
-    // }
+bool RedisContext::ReplyFlag(redisReply* rply)
+{
+    if (NULL == rply)
+    {
+        return false;
+    }
 
-    // if (!(rply->type == REDIS_REPLY_STATUS && strcasecmp(rply->str, "OK") == 0))
-    // {
-        // return false;
-    // }
+    if (!(rply->type == REDIS_REPLY_STATUS && strcasecmp(rply->str, "OK") == 0))
+    {
+        return false;
+    }
 
-    // return true;
-// }
+    return true;
+}
 
-// int  RedisContext::setString(string &key, string &value)
-// {
-    // if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
-    // {
-        // cout << "Redis init Error !!!" << endl;
-        // ReConnect();
-        // return -1;
-    // }
-    // redisReply *reply;
-    // reply = (redisReply *)redisCommand(m_redis, "SET %s %s", key.c_str(), value.c_str());//执行写入命令
-    // cout << "set string type = " << reply->type << endl;//获取响应的枚举类型
-    // int result = 0;
-    // if (reply == NULL)
-    // {
-        // redisFree(m_redis);
-        // m_redis = NULL;
-        // result = -1;
-        // cout << "set string fail : reply->str = NULL " << endl;
-        //pthread_spin_unlock(&m_redis_flock);
-        // return -1;
-    // }
-    // else if (strcmp(reply->str, "OK") == 0)//根据不同的响应类型进行判断获取成功与否
-    // {
-        // result = 1;
-    // }
-    // else
-    // {
-        // result = -1;
-        // cout << "set string fail :" << reply->str << endl;
-    // }
-    // freeReplyObject(reply);//释放响应信息
+int  RedisContext::setString(string &key, string &value)
+{
+    if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
+    {
+        cout << "Redis init Error !!!" << endl;
+        ReConnect();
+        return -1;
+    }
+    redisReply *reply;
+    reply = (redisReply *)redisCommand(m_redis, "SET %s %s", key.c_str(), value.c_str());//执行写入命令
+    cout << "set string type = " << reply->type << endl;//获取响应的枚举类型
+    int result = 0;
+    if (reply == NULL)
+    {
+        redisFree(m_redis);
+        m_redis = NULL;
+        result = -1;
+        cout << "set string fail : reply->str = NULL " << endl;
+        pthread_spin_unlock(&m_redis_flock);
+        return -1;
+    }
+    else if (strcmp(reply->str, "OK") == 0)//根据不同的响应类型进行判断获取成功与否
+    {
+        result = 1;
+    }
+    else
+    {
+        result = -1;
+        cout << "set string fail :" << reply->str << endl;
+    }
+    freeReplyObject(reply);//释放响应信息
 
-    // return result;
-// }
+    return result;
+}
 
 //向数据库写入vector（list）类型数据
 // int RedisContext::setList(string key, vector<int> value)
