@@ -1,4 +1,4 @@
-获取redis的rdb目录
+## 获取redis的rdb目录 ##
 
 redis-cli
  
