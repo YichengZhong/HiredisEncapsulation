@@ -225,6 +225,31 @@ int  RedisContext::setString(string &key, string &value)
     return result;
 }
 
+string getString(string &key)
+{
+    if (m_redis == NULL)//int err; /* Error flags, 错误标识，0表示无错误 */
+    {
+        cout << "Redis init Error !!!" << endl;
+        ReConnect();
+        return -1;
+    }
+    
+    redisReply *reply;
+    r = (redisReply*)redisCommand(c, "GET %s %s", key.c_str());
+    if (r->type != REDIS_REPLY_NIL) 
+    {
+        printf("Failed to execute command[%s].\n", command4);
+        freeReplyObject(r);
+        return "";
+    }
+    
+    string out=r->str;
+    printf("The value of 'stest1' is %s.\n", r->str);
+    freeReplyObject(r);
+    
+    return out;
+}
+
 //向数据库写入vector（list）类型数据
 // int RedisContext::setList(string key, vector<int> value)
 // {
