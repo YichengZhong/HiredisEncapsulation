@@ -250,6 +250,39 @@ string getString(string &key)
     return out;
 }
 
+bool RedisContext::IsKeyExist(string &key)
+{
+    if (m_redis == NULL || m_redis->err)//int err; /* Error flags, 错误标识，0表示无错误 */
+    {
+        cout << "Redis init Error !!!" << endl;
+        ReConnect();
+        return false;
+    }
+    redisReply *reply;
+    reply = (redisReply *)redisCommand(m_redis, "EXISTS %s", key.c_str());//执行写入命令
+    if (reply == NULL)
+    {
+        freeReplyObject(reply);
+        cout << "IsKeyExist fail : reply->str = NULL " << endl;
+        return false;
+    }
+    else if (strcmp(reply->str, "1") == 0)//根据不同的响应类型进行判断获取成功与否
+    {
+        cout << "key Exist :" << reply->str << endl;
+        freeReplyObject(reply);//释放响应信息
+        return true;
+    }
+    else
+    {
+        cout << "key No Exist :" << reply->str << endl;
+        freeReplyObject(reply);//释放响应信息
+        return false;
+    }
+    freeReplyObject(reply);//释放响应信息
+
+    return true;
+}
+
 //向数据库写入vector（list）类型数据
 // int RedisContext::setList(string key, vector<int> value)
 // {
