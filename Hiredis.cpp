@@ -284,54 +284,53 @@ bool RedisContext::IsKeyExist(string &key)
 }
 
 //向数据库写入vector（list）类型数据
-// int RedisContext::setList(string key, vector<int> value)
-// {
-    // if (m_redis == NULL || m_redis->err)
-    // {
-        // cout << "Redis init Error !!!" << endl;
-        // ReConnect();
-        // return -1;
-    // }
+int RedisContext::setList(string key, vector<int> value)
+{
+    if (m_redis == NULL || m_redis->err)
+    {
+        cout << "Redis init Error !!!" << endl;
+        ReConnect();
+        return -1;
+    }
 
-    // redisReply *reply;
+    redisReply *reply;
 
-    // int valueSize = value.size();
-    // int result = 0;
+    int valueSize = value.size();
+    int result = 0;
 
-    // for (int i = 0; i < valueSize; i++)
-    // {
-        // reply = (redisReply*)redisCommand(m_redis, "RPUSH %s %d", key.c_str(), value.at(i));
-        // cout << "set list type = " << reply->type << " ";
-        // int old = reply->integer;
-        // if (reply == NULL)
-        // {
-            // redisFree(m_redis);
-            // m_redis = NULL;
-            // result = -1;
-            // cout << "set list fail : reply->str = NULL " << endl;
-            //pthread_spin_unlock(&m_redis_flock);
-            // return -1;
-        // }
-        // else if (reply->integer == old++)
-        // {
-            // result = 1;
-            // cout << "rpush list ok" << endl;
-            // continue;
-        // }
-        // else
-        // {
-            // result = -1;
-            // cout << "set list fail ,reply->integer = " << reply->integer << endl;
-            // return -1;
-        // }
+    for (int i = 0; i < valueSize; i++)
+    {
+        reply = (redisReply*)redisCommand(m_redis, "RPUSH %s %d", key.c_str(), value.at(i));
+        cout << "set list type = " << reply->type << " ";
+        int old = reply->integer;
+        if (reply == NULL)
+        {
+            freeReplyObject(reply);
+            m_redis = NULL;
+            result = -1;
+            cout << "set list fail : reply->str = NULL " << endl;
+            return -1;
+        }
+        else if (reply->integer == old++)
+        {
+            result = 1;
+            cout << "rpush list ok" << endl;
+            continue;
+        }
+        else
+        {
+            result = -1;
+            cout << "set list fail ,reply->integer = " << reply->integer << endl;
+            return -1;
+        }
 
-    // }
+    }
 
-    // freeReplyObject(reply);
-    // cout << "set List  success" << endl;
-    // return result;
+    freeReplyObject(reply);
+    cout << "set List  success" << endl;
+    return result;
 
-// }
+}
 
 //从数据库读出vector（list）类型数据
 // vector<int> RedisContext::getList(string key)
